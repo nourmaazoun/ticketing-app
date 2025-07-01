@@ -1,0 +1,88 @@
+/* app.css */
+
+/* Style global du body */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eef2f7;
+  color: #333;
+
+}
+
+/* Conteneur principal de l’app */
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Titre principal */
+h1 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+/* Style du router outlet pour prendre toute la largeur max */
+router-outlet {
+  width: 100%;
+  max-width: 480px;
+}
+/* Navbar bleu clair en haut */
+.navbar {
+  width: 100%;
+  background-color: #6795ca; /* bleu clair */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar .logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #064273; /* texte bleu foncé */
+}
+
+.navbar button {
+  background-color: #ff6b6b; /* rouge clair */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navbar button:hover {
+  background-color: #e05555;
+}
+.top-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 58px;
+}
+
+:host {
+  display: block;
+  padding-top: 56px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+.example-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+
+html, body {
+  overflow: hidden;
+}

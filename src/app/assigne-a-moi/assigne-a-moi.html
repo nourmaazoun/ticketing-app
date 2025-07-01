@@ -1,0 +1,12 @@
+<h2>Tickets Assignés à Moi</h2>
+
+<div *ngIf="tickets.length === 0">
+  Aucun ticket ne vous est assigné.
+</div>
+
+<ul *ngIf="tickets.length > 0">
+  <li *ngFor="let ticket of tickets">
+    <strong>{{ ticket.titre }}</strong><br />
+    {{ ticket.description }}
+  </li>
+</ul>
