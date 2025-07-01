@@ -12,7 +12,7 @@ export interface Ticket {
   userName: string;
   assignedToId?: number;  // Id de l’employé assigné, optionnel si non assigné
   assignedTo?: string;  
-  status: 'Ouvert' | 'Fermé';   // Nom de l’employé assigné, optionnel
+  statut: string; // Nom de l’employé assigné, optionnel
 }
 
 
@@ -32,7 +32,13 @@ export class MyTicketService {
     return this.http.post<Ticket>(this.apiUrl, ticket);
   }
  assignTicket(ticketId: number, employeId: number) {
-  return this.http.put(`/api/Tickets/${ticketId}/assign/${employeId}`, {});
+  return this.http.put(`${this.apiUrl}/${ticketId}/assign/${employeId}`, {});
+}
+updateStatut(ticketId: number, statut: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/update-statut`, {
+    id: ticketId,
+    statut: statut
+  });
 }
 
 

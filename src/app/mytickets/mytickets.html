@@ -29,12 +29,15 @@
     <mat-header-cell *matHeaderCellDef> nom du demandeur </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
   </ng-container>
- <ng-container matColumnDef="status">
-  <mat-header-cell *matHeaderCellDef class="mat-column-status"> Statut </mat-header-cell>
-  <mat-cell *matCellDef="let element" class="mat-column-status">
-    <mat-select [(value)]="element.status" (selectionChange)="onStatusChange(element)">
-      <mat-option value="Ouvert">Ouvert</mat-option>
-      <mat-option value="Fermé">Fermé</mat-option>
+<ng-container matColumnDef="statut">
+  <mat-header-cell *matHeaderCellDef class="mat-column-statut">Statut</mat-header-cell>
+  <mat-cell *matCellDef="let element" class="mat-column-statut">
+    <mat-select
+      [value]="element.statut"
+      (selectionChange)="onStatutChange(element.id, $event.value)"
+    >
+      <mat-option value="ouvert">Ouvert</mat-option>
+      <mat-option value="fermé">Fermé</mat-option>
     </mat-select>
   </mat-cell>
 </ng-container>

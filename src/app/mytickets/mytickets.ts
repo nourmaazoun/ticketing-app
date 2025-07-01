@@ -28,7 +28,7 @@ export class MyTicketsComponent implements OnInit {
     'priority',
     'requester',
     'userName',
-    'status',
+    'statut',
     'assignedTo'
   ];
 
@@ -46,7 +46,7 @@ export class MyTicketsComponent implements OnInit {
       next: (data) => {
         this.dataSource = data.map(ticket => ({
           ...ticket,
-          status: ticket.status || 'Ouvert',
+          statut: ticket.statut || 'Ouvert',
           assignedTo: ticket.assignedTo || ''
         }));
       },
@@ -66,12 +66,18 @@ export class MyTicketsComponent implements OnInit {
     });
   }
 
-  onStatusChange(ticket: Ticket) {
-    console.log(`Nouveau statut pour le ticket "${ticket.title}": ${ticket.status}`);
-    // Appelle un service pour mettre à jour en base si besoin
-  }
+  onStatutChange(ticketId: number, newStatut: string) {
+  this.ticketService.updateStatut(ticketId, newStatut).subscribe({
+    next: () => {
+      console.log('Statut mis à jour !');
+    },
+    error: (err) => {
+      console.error('Erreur mise à jour statut :', err);
+    }
+  });
+}
 
-  onAssigneeChange(ticket: Ticket) {
+onAssigneeChange(ticket: Ticket) {
   if (ticket.assignedToId != null) {
     this.ticketService.assignTicket(ticket.id, ticket.assignedToId).subscribe({
       next: () => {

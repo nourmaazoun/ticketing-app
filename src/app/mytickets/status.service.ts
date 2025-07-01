@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Status {
+export interface Statut {
   id: number;
   name: string;
 }
@@ -11,12 +11,12 @@ export interface Status {
 @Injectable({
   providedIn: 'root'
 })
-export class StatusService {
-  private apiUrl = 'https://localhost:7224/api/Status';
+export class StatutService {
+  private apiUrl = 'https://localhost:7224/api/Statut';
 
   constructor(private http: HttpClient) {}
 
-  getStatuses(): Observable<Status[]> {
-    return this.http.get<Status[]>(this.apiUrl);
+  getStatuses(): Observable<Statut[]> {
+    return this.http.get<[Statut]>(this.apiUrl);
   }
 }
