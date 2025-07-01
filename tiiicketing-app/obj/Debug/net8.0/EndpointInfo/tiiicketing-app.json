@@ -121,6 +121,37 @@
         }
       }
     },
+    "/api/Tickets/update-statut": {
+      "put": {
+        "tags": [
+          "Tickets"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTicketStatutDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTicketStatutDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTicketStatutDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Users/register": {
       "post": {
         "tags": [
@@ -311,6 +342,24 @@
           },
           "employe": {
             "$ref": "#/components/schemas/Employe"
+          },
+          "statut": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTicketStatutDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statut": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

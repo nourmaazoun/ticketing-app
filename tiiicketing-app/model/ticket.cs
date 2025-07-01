@@ -15,5 +15,7 @@
 
         // Propriété de navigation vers l'employé assigné
         public Employe? Employe { get; set; }
+        public string Statut { get; set; } = "ouvert";
+      
     }
 }

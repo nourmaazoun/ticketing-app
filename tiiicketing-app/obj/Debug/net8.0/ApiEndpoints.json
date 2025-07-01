@@ -73,6 +73,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "tiiicketing_app.Controllers.TicketsController",
+    "Method": "UpdateStatut",
+    "RelativePath": "api/Tickets/update-statut",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "tiiicketing_app.model.UpdateTicketStatutDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "tiiicketing_app.Controllers.UsersController",
     "Method": "GetEmployeNames",
     "RelativePath": "api/Users/employes",

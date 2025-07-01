@@ -57,7 +57,8 @@ namespace tiiicketing_app.Controllers
                 ticket.UserName
                ,
                 AssignedToId = ticket.EmployeId,
-                AssignedToName = ticket.Employe?.Nom
+                AssignedToName = ticket.Employe?.Nom,
+                 Statut = ticket.Statut
             });
         }
 
@@ -81,7 +82,8 @@ namespace tiiicketing_app.Controllers
                 t.UserName,
                
                 AssignedToId = t.EmployeId,
-                AssignedToName = t.Employe != null ? t.Employe.Nom : null
+                AssignedToName = t.Employe != null ? t.Employe.Nom : null,
+                Statut = t.Statut
             });
 
             return Ok(result);
@@ -102,8 +104,21 @@ namespace tiiicketing_app.Controllers
 
             return NoContent();
         }
+        [HttpPut("update-statut")]
+        public async Task<IActionResult> UpdateStatut([FromBody] UpdateTicketStatutDto dto)
+        {
+            var ticket = await _context.Tickets.FindAsync(dto.Id);
+
+            if (ticket == null)
+                return NotFound("Ticket introuvable");
+
+            ticket.Statut = dto.Statut;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Statut mis à jour avec succès" });
+        }
 
         // (Optionnel) mettre à jour le statut du ticket
-      
+
     }
 }
