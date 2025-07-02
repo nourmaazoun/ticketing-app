@@ -41,5 +41,11 @@ updateStatut(ticketId: number, statut: string): Observable<any> {
   });
 }
 
+  getTicketsByEmploye(employeId: number): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(`${this.apiUrl}/by-user/${employeId}`);
+  }
+
+
+
 
 }

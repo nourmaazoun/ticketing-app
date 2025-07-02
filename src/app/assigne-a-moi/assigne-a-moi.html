@@ -6,7 +6,8 @@
 
 <ul *ngIf="tickets.length > 0">
   <li *ngFor="let ticket of tickets">
-    <strong>{{ ticket.titre }}</strong><br />
+   <strong>{{ ticket.title }}</strong><br />
+{{ ticket.description }}
     {{ ticket.description }}
   </li>
 </ul>
