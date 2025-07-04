@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {  OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 // Import des modules Material nécessaires
 import { MatTableModule } from '@angular/material/table';
@@ -12,6 +13,7 @@ import { Ticket } from '../mytickets/myticket.service';
   selector: 'app-assigne-a-moi',
   templateUrl: './assigne-a-moi.html',
   styleUrls: ['./assigne-a-moi.css'],
+
   standalone: true,
   imports: [
     CommonModule,
