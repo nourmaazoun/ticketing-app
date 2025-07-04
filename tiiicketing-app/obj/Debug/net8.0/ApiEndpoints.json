@@ -74,6 +74,32 @@
   },
   {
     "ContainingType": "tiiicketing_app.Controllers.TicketsController",
+    "Method": "GetTicketsByEmploye",
+    "RelativePath": "api/Tickets/by-user/{employeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "employeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "tiiicketing_app.Controllers.TicketsController",
     "Method": "UpdateStatut",
     "RelativePath": "api/Tickets/update-statut",
     "HttpMethod": "PUT",

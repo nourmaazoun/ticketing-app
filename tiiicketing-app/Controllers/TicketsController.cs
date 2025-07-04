@@ -40,7 +40,7 @@ namespace tiiicketing_app.Controllers
         {
             var ticket = await _context.Tickets
                 .Include(t => t.Employe)
-                
+
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (ticket == null)
@@ -58,7 +58,7 @@ namespace tiiicketing_app.Controllers
                ,
                 AssignedToId = ticket.EmployeId,
                 AssignedToName = ticket.Employe?.Nom,
-                 Statut = ticket.Statut
+                Statut = ticket.Statut
             });
         }
 
@@ -68,7 +68,7 @@ namespace tiiicketing_app.Controllers
         {
             var tickets = await _context.Tickets
                 .Include(t => t.Employe)
-                
+
                 .ToListAsync();
 
             var result = tickets.Select(t => new
@@ -80,7 +80,7 @@ namespace tiiicketing_app.Controllers
                 t.Priority,
                 t.Requester,
                 t.UserName,
-               
+
                 AssignedToId = t.EmployeId,
                 AssignedToName = t.Employe != null ? t.Employe.Nom : null,
                 Statut = t.Statut
@@ -117,8 +117,32 @@ namespace tiiicketing_app.Controllers
 
             return Ok(new { message = "Statut mis à jour avec succès" });
         }
+        [HttpGet("by-user/{employeId}")]
+       
+        public async Task<ActionResult<IEnumerable<object>>> GetTicketsByEmploye(int employeId)
+        {
+            var tickets = await _context.Tickets
+                .Where(t => t.EmployeId == employeId)
+                .Include(t => t.Employe)
+                .ToListAsync();
 
-        // (Optionnel) mettre à jour le statut du ticket
+            var result = tickets.Select(t => new
+            {
+                t.Id,
+                t.Title,
+                t.Description,
+                t.Category,
+                t.Priority,
+                t.Requester,
+                t.UserName,
+                AssignedToId = t.EmployeId,
+                AssignedToName = t.Employe != null ? t.Employe.Nom : null,
+                Statut = t.Statut
+            });
+
+            return Ok(result);
+        }
+
 
     }
 }

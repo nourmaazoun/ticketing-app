@@ -1,4 +1,6 @@
-﻿namespace tiiicketing_app.model
+﻿using System.Text.Json.Serialization;
+
+namespace tiiicketing_app.model
 {
     public class Ticket
     {
@@ -15,7 +17,7 @@
 
         // Propriété de navigation vers l'employé assigné
         public Employe? Employe { get; set; }
+        [JsonPropertyName("statut")]
         public string Statut { get; set; } = "ouvert";
-      
     }
 }
