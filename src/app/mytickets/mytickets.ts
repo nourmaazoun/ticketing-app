@@ -28,7 +28,7 @@ export class MyTicketsComponent implements OnInit {
     'priority',
     'requester',
     'userName',
-    'statut',
+    'status',
     'assignedTo'
   ];
 
@@ -39,22 +39,19 @@ export class MyTicketsComponent implements OnInit {
     private ticketService: MyTicketService,
     private employeService: EmployeService
   ) {}
-
-  ngOnInit(): void {
-    // Charger les tickets
-    this.ticketService.getTickets().subscribe({
-      next: (data) => {
-        this.dataSource = data.map(ticket => ({
-          ...ticket,
-          statut: ticket.statut || 'Ouvert',
-          assignedTo: ticket.assignedTo || ''
-        }));
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des tickets', err);
-      }
-    });
-
+ngOnInit(): void {
+  this.ticketService.getTickets().subscribe({
+    next: (data) => {
+      this.dataSource = data.map(ticket => ({
+        ...ticket,
+        status: (ticket as any).statut || 'ouvert',  // cast any pour contourner TS
+        assignedTo: ticket.assignedTo || ''
+      }));
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des tickets', err);
+    }
+  });
     // Charger les employés
     this.employeService.getEmployes().subscribe({
       next: (emps) => {
@@ -66,10 +63,15 @@ export class MyTicketsComponent implements OnInit {
     });
   }
 
-  onStatutChange(ticketId: number, newStatut: string) {
+ onStatutChange(ticketId: number, newStatut: string) {
   this.ticketService.updateStatut(ticketId, newStatut).subscribe({
     next: () => {
       console.log('Statut mis à jour !');
+      // Trouver le ticket dans dataSource et mettre à jour son statut localement
+      const ticket = this.dataSource.find(t => t.id === ticketId);
+      if (ticket) {
+        ticket.status = newStatut;  // ou 'statut' selon ta propriété
+      }
     },
     error: (err) => {
       console.error('Erreur mise à jour statut :', err);

@@ -10,9 +10,9 @@ export interface Ticket {
   priority: string;
   requester: string;
   userName: string;
-  assignedToId?: number;  // Id de l’employé assigné, optionnel si non assigné
+  assignedToId?: number;
   assignedTo?: string;  
-  statut: string; // Nom de l’employé assigné, optionnel
+ status: string;  
 }
 
 
@@ -34,12 +34,13 @@ export class MyTicketService {
  assignTicket(ticketId: number, employeId: number) {
   return this.http.put(`${this.apiUrl}/${ticketId}/assign/${employeId}`, {});
 }
-updateStatut(ticketId: number, statut: string): Observable<any> {
+updateStatut(id: number, status: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/update-statut`, {
-    id: ticketId,
-    statut: statut
+    id: id,
+    statut: status // ici "statut" car côté .NET, tu reçois un DTO avec "Statut"
   });
 }
+
 
   getTicketsByEmploye(employeId: number): Observable<Ticket[]> {
     return this.http.get<Ticket[]>(`${this.apiUrl}/by-user/${employeId}`);
