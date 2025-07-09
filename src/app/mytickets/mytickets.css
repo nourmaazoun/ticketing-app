@@ -1,0 +1,66 @@
+/* Supprimer les bordures du tableau */
+.mat-mdc-table {
+  border: none;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Supprimer les lignes noires entre les lignes */
+.mat-mdc-row, .mat-mdc-header-row {
+  border-bottom: none !important;
+  transition: background-color 0.3s ease;
+}
+
+/* Cacher les lignes par défaut */
+.mat-mdc-row {
+  background-color: transparent;
+}
+
+/* Afficher une couleur douce au hover uniquement */
+.mat-mdc-row:hover {
+  background-color: #cfd7df; /* Bleu très clair */
+}
+
+/* Cellules sans bordure */
+.mat-mdc-cell, .mat-mdc-header-cell {
+  border-bottom: none !important;
+  padding: 12px;
+}
+
+/* Supprimer toute ombre */
+.mat-elevation-z8 {
+  box-shadow: none !important;
+}
+.badge-open {
+  color: white;
+  background-color: green;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.badge-closed {
+  color: white;
+  background-color: red;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.mat-column-status {
+  max-width: 120px;  /* limite la largeur max de la colonne statut */
+  white-space: nowrap; /* évite le retour à la ligne dans le texte */
+  overflow: hidden;   /* cache le dépassement */
+  text-overflow: ellipsis; /* affiche "..." si le texte est trop long */
+}
+
+.mat-column-assignedTo {
+  width: 150px; /* ou ce que tu veux pour la colonne Assigné à */
+}
+
+::ng-deep .mat-table {
+  overflow-x: auto;
+  width: 100%;
+}
+
+::ng-deep .mat-header-cell,
+::ng-deep .mat-cell {
+  white-space: nowrap;
+}

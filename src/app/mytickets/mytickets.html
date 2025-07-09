@@ -1,0 +1,75 @@
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="title">
+    <mat-header-cell *matHeaderCellDef> Titre </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="category">
+    <mat-header-cell *matHeaderCellDef> Catégorie </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.category}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="priority">
+    <mat-header-cell *matHeaderCellDef> Priorité </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="requester">
+    <mat-header-cell *matHeaderCellDef> e-mail </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.requester}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="userName">
+    <mat-header-cell *matHeaderCellDef> nom du demandeur </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
+  </ng-container>
+<ng-container matColumnDef="status">
+  <mat-header-cell *matHeaderCellDef class="mat-column-statut">Statut</mat-header-cell>
+  <mat-cell *matCellDef="let element" class="mat-column-statut">
+    <mat-select
+      [value]="element.status"
+      (selectionChange)="onStatutChange(element.id, $event.value)"
+    >
+    <mat-option value="ouvert">Ouvert</mat-option>
+    <mat-option value="en-cours">En cours</mat-option> 
+    <mat-option value="ferme">Fermé</mat-option>
+
+    </mat-select>
+  </mat-cell>
+</ng-container>
+
+
+<ng-container matColumnDef="assignedTo">
+  <mat-header-cell *matHeaderCellDef class="mat-column-assignedTo"> Assigné à </mat-header-cell>
+  <mat-cell *matCellDef="let ticket" class="mat-column-assignedTo">
+    <mat-select [(ngModel)]="ticket.assignedToId" (selectionChange)="onAssigneeChange(ticket)">
+      <mat-option *ngFor="let emp of employees" [value]="emp.id">
+        {{ emp.nom }}
+      </mat-option>
+    </mat-select>
+  </mat-cell>
+</ng-container>
+<ng-container matColumnDef="attachmentPath">
+  <mat-header-cell *matHeaderCellDef> Pièce jointe </mat-header-cell>
+  <mat-cell *matCellDef="let element">
+  <span *ngIf="element.attachmentPath; else notFound" style="color: green;">
+    ✔️ Fichier attaché
+  </span>
+  <ng-template #notFound>
+    <span style="color: red;">❌ Aucun</span>
+  </ng-template>
+</mat-cell>
+
+</ng-container>
+
+
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

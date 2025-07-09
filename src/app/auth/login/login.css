@@ -1,0 +1,101 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* plein écran vertical */
+  background-color: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+form {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 320px;
+  box-sizing: border-box;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+/* Champ Nom ajouté ici (input[type="text"]) */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #3f51b5;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  background-color: #3f51b5;
+  color: white;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:disabled {
+  background-color: #9fa8da;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #303f9f;
+}
+
+p {
+  margin-top: 1rem;
+  text-align: center;
+  color: #d32f2f; /* rouge pour l’erreur */
+  font-weight: 600;
+}
+
+.form-wrapper {
+  margin: 60px auto 0 auto;  /* légèrement en haut */
+  width: 300px;
+  text-align: center;
+}
+
+/* Optionnel : règle générale pour tous les inputs, si tu veux plus de marge ou padding */
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}

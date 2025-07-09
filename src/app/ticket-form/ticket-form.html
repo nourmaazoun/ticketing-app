@@ -1,0 +1,79 @@
+<div *ngIf="isLoggedIn" class="ticket-form-container">
+  <h2>Créer un nouveau ticket</h2>
+
+  <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group half-width">
+      <label for="userName">User name</label>
+      <input id="userName" formControlName="userName" type="text" placeholder="Identifiant utilisateur" />
+      <small *ngIf="ticketForm.get('userName')?.invalid && ticketForm.get('userName')?.touched" class="error">
+        Le nom de l'utilisateur est requis.
+      </small>
+    </div>
+
+    <div class="form-group half-width">
+      <label for="requester">Email du demandeur</label>
+      <input id="requester" formControlName="requester" type="email" placeholder="exemple@domaine.com" />
+      <small *ngIf="ticketForm.get('requester')?.invalid && ticketForm.get('requester')?.touched" class="error">
+        Un email valide est requis.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="title">Titre du ticket</label>
+      <input id="title" formControlName="title" type="text" placeholder="Entrez un titre" />
+      <small *ngIf="ticketForm.get('title')?.invalid && ticketForm.get('title')?.touched" class="error">
+        Le titre est requis.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" rows="4" placeholder="Décrivez le problème ou la demande"></textarea>
+      <small *ngIf="ticketForm.get('description')?.invalid && ticketForm.get('description')?.touched" class="error">
+        La description est requise.
+      </small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group half-width">
+        <label for="category">Catégorie</label>
+        <select id="category" formControlName="category">
+          <option value="" disabled>Choisissez une catégorie</option>
+          <option value="bug">Bug</option>
+          <option value="demande">Demande</option>
+          <option value="support">Support</option>
+        </select>
+        <small *ngIf="ticketForm.get('category')?.invalid && ticketForm.get('category')?.touched" class="error">
+          La catégorie est requise.
+        </small>
+      </div>
+
+      <div class="form-group half-width">
+        <label for="priority">Priorité</label>
+        <select id="priority" formControlName="priority">
+          <option value="" disabled>Choisissez la priorité</option>
+          <option value="basse">Basse</option>
+          <option value="moyenne">Moyenne</option>
+          <option value="haute">Haute</option>
+          <option value="urgente">Urgente</option>
+        </select>
+        <small *ngIf="ticketForm.get('priority')?.invalid && ticketForm.get('priority')?.touched" class="error">
+          La priorité est requise.
+        </small>
+      </div>
+    </div>
+  <div class="form-group">
+  <label for="file">Fichier joint :</label>
+  <input type="file" id="file" (change)="onFileSelected($event)" accept="*/*">
+  <small *ngIf="attachmentError" class="error">{{ attachmentError }}</small>
+</div>
+
+
+    <button type="submit" [disabled]="ticketForm.invalid" class="btn-submit">Envoyer le ticket</button>
+  </form>
+</div>
+
+<div *ngIf="!isLoggedIn" class="not-logged-in-message">
+  <p>Veuillez vous connecter pour créer un ticket.</p>
+</div>

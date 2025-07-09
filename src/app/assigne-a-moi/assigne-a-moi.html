@@ -1,0 +1,144 @@
+<div class="kanban-board">
+  <h2>Tickets Assignés à Moi</h2>
+
+  <!-- Message si aucun ticket -->
+  <div *ngIf="hasNoTickets()" class="empty-message">
+    Aucun ticket ne vous est assigné.
+  </div>
+
+  <!-- Affichage du Kanban -->
+  <div *ngIf="hasTickets()" class="kanban-container">
+    <div class="kanban-columns">
+      <div *ngFor="let column of columns; trackBy: trackByColumnId"
+           class="kanban-column"
+           (drop)="onDrop($event, column.id)"
+           (dragover)="allowDrop($event)"
+           (dragleave)="endDrag()">
+        <h3>{{ column.title }} ({{ column.tasks.length }})</h3>
+        
+        <div class="kanban-tasks">
+          <div *ngFor="let task of column.tasks; trackBy: trackByTaskId"
+               class="kanban-task"
+               draggable="true"
+               (dragstart)="startDrag($event, task.id, column.id)"
+               (click)="openEditForm(task, column.id)"
+               [class.dragging]="isDragging">
+               
+            <div class="task-header">
+              <strong>{{ task.title }}</strong>
+              <span class="priority-badge"
+                    [class.high]="task.priority === 'high'"
+                    [class.medium]="task.priority === 'medium'"
+                    [class.low]="task.priority === 'low'">
+                {{ task.priority | titlecase }}
+              </span>
+            </div>
+            
+            <div class="task-category">{{ task.category }}</div>
+            
+            <div *ngIf="task.description" class="task-description">
+              {{ task.description }}
+            </div>
+            
+            <div class="task-footer">
+              <span *ngIf="task.assignedTo" class="assignee">
+                {{ task.assignedTo }}
+              </span>
+              <span *ngIf="task.requester" class="requester">
+                Demandé par: {{ task.requester }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire d'édition -->
+ <!-- Formulaire d'édition -->
+<div *ngIf="selectedTask" class="edit-modal">
+  <div class="modal-overlay" (click)="closeEditForm()"></div>
+
+  <div class="modal-content">
+    <button class="close-button" (click)="closeEditForm()">&times;</button>
+
+    <h3>Modifier le ticket #{{ selectedTask.id }}</h3>
+
+    <form (ngSubmit)="saveTaskChanges()">
+      <div class="form-group">
+        <label for="edit-title">Titre</label>
+        <input id="edit-title" type="text" [(ngModel)]="selectedTask.title" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea id="edit-description" [(ngModel)]="selectedTask.description" name="description" rows="4"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-category">Catégorie</label>
+          <input id="edit-category" type="text" [(ngModel)]="selectedTask.category" name="category">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-priority">Priorité</label>
+          <select id="edit-priority" [(ngModel)]="selectedTask.priority" name="priority">
+            <option value="high">Haute</option>
+            <option value="medium">Moyenne</option>
+            <option value="low">Basse</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+  <label for="edit-status">Statut</label>
+  <select id="edit-status" [(ngModel)]="selectedTask.kanbanStatus" name="kanbanStatus">
+    <option *ngFor="let column of columns" [value]="column.id">
+      {{ column.title }}
+    </option>
+  </select>
+</div>
+
+
+      <!-- Affichage de la pièce jointe -->
+       <!-- ... ta modale existante ... -->
+
+<!-- Affichage de la pièce jointe -->
+<div *ngIf="selectedTask?.attachmentPath; else noAttachment" class="form-group">
+  <label>Pièce jointe</label>
+  <div>
+    <a 
+      [href]="'https://localhost:7224' + selectedTask.attachmentPath" 
+      target="_blank"
+      style="color: blue; text-decoration: underline; margin-top: 10px; display: inline-block;"
+    >
+      📎 Voir la pièce jointe
+    </a>
+  </div>
+</div>
+
+<ng-template #noAttachment>
+  <div class="form-group">
+    <label>Pièce jointe</label>
+    <p style="color: red;">Aucune pièce jointe</p>
+  </div>
+</ng-template>
+
+
+<ng-template #noAttachment>
+  <p style="color: #888; font-style: italic; margin-top: 10px;">
+    Aucune pièce jointe disponible.
+  </p>
+</ng-template>
+
+<!-- ... reste de ton formulaire ... -->
+
+      
+      <div class="form-actions" style="margin-top: 20px;">
+        <button type="button" class="btn-cancel" (click)="closeEditForm()">Annuler</button>
+        <button type="submit" class="btn-save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>

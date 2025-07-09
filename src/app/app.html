@@ -1,0 +1,31 @@
+<ng-container *ngIf="isLoggedIn; else loginOnly">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="top-navbar">
+    <span>Bienvenue {{ userName }}</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="logout()">Se déconnecter</button>
+  </mat-toolbar>
+
+  <!-- Sidebar + contenu -->
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav
+      mode="side"
+      [opened]="!isLeftSidebarCollapsed()"
+      (closedStart)="isLeftSidebarCollapsed.set(true)"
+    >
+      <app-left-sidebar
+        [isLeftSidebarCollapsed]="isLeftSidebarCollapsed()"
+        (changeIsLeftSidebarCollapsed)="isLeftSidebarCollapsed.set($event)"
+      ></app-left-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-template #loginOnly>
+  <!-- Affiche uniquement le contenu pour login, sans sidebar ni navbar -->
+  <router-outlet></router-outlet>
+</ng-template>
