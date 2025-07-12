@@ -11,7 +11,7 @@ export interface Ticket {
   priority: string;
   requester: string;
   userName: string;
-  assignedToId?: number;
+    assignedToId?: number | null;
   assignedTo?: string;
   statut?: string;  // Ajouté pour correspondre à l'API
   status: string;
@@ -83,4 +83,10 @@ export class MyTicketService {
       return of(result as T);
     };
   }
+
+
+// Dans myticket.service.ts
+updateTicket(data: Ticket): Observable<Ticket> {
+  return this.http.put<Ticket>(`${this.apiUrl}/${data.id}`, data);
+}
 }

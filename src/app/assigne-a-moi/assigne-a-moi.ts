@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MyTicketService } from '../mytickets/myticket.service';
 import { Ticket } from '../mytickets/myticket.service';
+import { EmployeService } from '../mytickets/employe.service';
+import { Employe } from '../mytickets/employe.service'
+
 
 interface KanbanTask extends Ticket {
   kanbanStatus: 'ouvert' | 'en-cours' | 'ferme';
@@ -22,6 +25,7 @@ interface KanbanColumn {
   styleUrls: ['./assigne-a-moi.css']
 })
 export class AssigneAMoiComponent implements OnInit {
+  employes: Employe[] = [];
   public columns: KanbanColumn[] = [
     { id: 'ouvert', title: 'Ouvert', tasks: [] },
     { id: 'en-cours', title: 'En cours', tasks: [] },
@@ -33,12 +37,25 @@ export class AssigneAMoiComponent implements OnInit {
   public isLoading: boolean = true;
   public isDragging: boolean = false;
 
-  constructor(private ticketService: MyTicketService) {}
+    constructor(
+    private ticketService: MyTicketService,
+    private employeService: EmployeService // Injectez le service EmployeService
+  ) {}
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.loadAssignedTickets();
+    this.loadEmployes();
   }
-
+   loadEmployes(): void {
+    this.employeService.getEmployes().subscribe({
+      next: (employes) => {
+        this.employes = employes;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des employés', error);
+      }
+    });
+  }
   // Méthodes trackBy pour l'optimisation
   public trackByColumnId(index: number, column: KanbanColumn): string {
     return column.id;
@@ -122,21 +139,69 @@ private normalizeStatus(status?: string): 'ouvert' | 'en-cours' | 'ferme' {
     this.selectedTask = null;
     this.selectedColumnId = null;
   }
+saveTaskChanges(): void {
+  if (!this.selectedTask) return;
 
- saveTaskChanges(): void {
-  if (this.selectedTask) {
-    const newStatus = this.mapToApiStatus(this.selectedTask.kanbanStatus);
+  this.selectedTask.statut = this.mapToApiStatus(this.selectedTask.kanbanStatus);
 
-    this.ticketService.updateStatut(this.selectedTask.id, newStatus).subscribe({
-      next: () => {
-        this.loadAssignedTickets(); // recharge toutes les colonnes
-        this.closeEditForm();
-      },
-      error: (err) => {
-        console.error('Erreur:', err);
-        this.loadAssignedTickets(); // tente de corriger même en cas d'erreur
+  // Assigner null si undefined ou autre
+  if (this.selectedTask.assignedToId === undefined) {
+    this.selectedTask.assignedToId = null;
+  }
+
+  this.ticketService.updateTicket(this.selectedTask).subscribe({
+    next: (updatedTicket) => {
+      const updatedTask: KanbanTask = {
+        ...updatedTicket,
+        kanbanStatus: this.normalizeStatus(updatedTicket.statut || updatedTicket.status),
+      };
+
+      this.updateLocalTask(updatedTask);
+      this.closeEditForm();
+    },
+    error: (err) => {
+      console.error('Échec de mise à jour', err);
+      this.loadAssignedTickets();
+    }
+  });
+
+
+  this.ticketService.updateTicket(this.selectedTask).subscribe({
+    next: (updatedTicket) => {
+      const updatedTask: KanbanTask = {
+        ...updatedTicket,
+        kanbanStatus: this.normalizeStatus(updatedTicket.statut || updatedTicket.status),
+      };
+
+      this.updateLocalTask(updatedTask);
+      this.closeEditForm();
+    },
+    error: (err) => {
+      console.error('Échec de mise à jour', err);
+      this.loadAssignedTickets();
+    }
+  });
+}
+
+// Méthode utilitaire pour mettre à jour localement une tâche
+private updateLocalTask(updatedTask: KanbanTask): void {
+  for (const column of this.columns) {
+    const taskIndex = column.tasks.findIndex(t => t.id === updatedTask.id);
+    if (taskIndex !== -1) {
+      // Si le statut n'a pas changé
+      if (column.id === updatedTask.kanbanStatus) {
+        column.tasks[taskIndex] = updatedTask;
+      } 
+      // Si le statut a changé
+      else {
+        column.tasks.splice(taskIndex, 1);
+        const newColumn = this.columns.find(c => c.id === updatedTask.kanbanStatus);
+        if (newColumn) {
+          newColumn.tasks.push(updatedTask);
+        }
       }
-    });
+      break;
+    }
   }
 }
 
