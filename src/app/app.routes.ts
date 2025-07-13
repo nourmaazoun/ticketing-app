@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'mytickets',
-    loadComponent: () => import('./mytickets/mytickets').then(m => m.MyTicketsComponent),
+    loadComponent: () => import('./mytickets/mytickets').then(m => m.KanbanBoardComponent),
     canActivate: [AuthGuard]
   },
   {

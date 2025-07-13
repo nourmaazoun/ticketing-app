@@ -41,8 +41,8 @@
             </div>
             
             <div class="task-footer">
-              <span *ngIf="task.assignedTo" class="assignee">
-                {{ task.assignedTo }}
+              <span *ngIf="task.assignedToName" class="assignee">
+                {{ task.assignedToName }}
               </span>
               <span *ngIf="task.requester" class="requester">
                 Demandé par: {{ task.requester }}

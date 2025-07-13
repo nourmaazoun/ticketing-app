@@ -1,75 +1,143 @@
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-  <ng-container matColumnDef="title">
-    <mat-header-cell *matHeaderCellDef> Titre </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="description">
-    <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="category">
-    <mat-header-cell *matHeaderCellDef> Catégorie </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.category}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="priority">
-    <mat-header-cell *matHeaderCellDef> Priorité </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="requester">
-    <mat-header-cell *matHeaderCellDef> e-mail </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.requester}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="userName">
-    <mat-header-cell *matHeaderCellDef> nom du demandeur </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
-  </ng-container>
-<ng-container matColumnDef="status">
-  <mat-header-cell *matHeaderCellDef class="mat-column-statut">Statut</mat-header-cell>
-  <mat-cell *matCellDef="let element" class="mat-column-statut">
-    <mat-select
-      [value]="element.status"
-      (selectionChange)="onStatutChange(element.id, $event.value)"
-    >
-    <mat-option value="ouvert">Ouvert</mat-option>
-    <mat-option value="en-cours">En cours</mat-option> 
-    <mat-option value="ferme">Fermé</mat-option>
-
-    </mat-select>
-  </mat-cell>
-</ng-container>
-
-
-<ng-container matColumnDef="assignedTo">
-  <mat-header-cell *matHeaderCellDef class="mat-column-assignedTo"> Assigné à </mat-header-cell>
-  <mat-cell *matCellDef="let ticket" class="mat-column-assignedTo">
-    <mat-select [(ngModel)]="ticket.assignedToId" (selectionChange)="onAssigneeChange(ticket)">
-      <mat-option *ngFor="let emp of employees" [value]="emp.id">
-        {{ emp.nom }}
-      </mat-option>
-    </mat-select>
-  </mat-cell>
-</ng-container>
-<ng-container matColumnDef="attachmentPath">
-  <mat-header-cell *matHeaderCellDef> Pièce jointe </mat-header-cell>
-  <mat-cell *matCellDef="let element">
-  <span *ngIf="element.attachmentPath; else notFound" style="color: green;">
-    ✔️ Fichier attaché
-  </span>
-  <ng-template #notFound>
-    <span style="color: red;">❌ Aucun</span>
-  </ng-template>
-</mat-cell>
-
-</ng-container>
+<div class="kanban-board">
+  <h2>Tous les tickets</h2>
+<!-- Affichage du Kanban -->
+<div *ngIf="hasTickets()" class="kanban-container">
+  <div class="kanban-columns">
+    <div *ngFor="let column of columns; trackBy: trackByColumnId"
+         class="kanban-column"
+         (drop)="onDrop($event, column.id)"
+         (dragover)="allowDrop($event)"
+         (dragleave)="endDrag()">
+      <h3>{{ column.title }} ({{ column.tasks.length }})</h3>
+      
+      
+      <div class="kanban-tasks">
+        <div *ngFor="let task of column.tasks; trackBy: trackByTaskId"
+             class="kanban-task"
+             draggable="true"
+             (dragstart)="startDrag($event, task.id, column.id)"
+             (click)="openEditForm(task, column.id)"
+             [class.dragging]="isDragging">
+             
+       <span class="priority-badge"
+      [class.high]="task.priority === 'haute' || task.priority === 'high'"
+      [class.medium]="task.priority === 'moyenne' || task.priority === 'medium'"
+      [class.low]="task.priority === 'basse' || task.priority === 'low'">
+  {{ 
+    (task.priority === 'haute' || task.priority === 'high') ? 'Haute' : 
+    (task.priority === 'moyenne' || task.priority === 'medium') ? 'Moyenne' : 
+    'Basse' 
+  }}
+</span>
 
 
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+
+
+          <div *ngIf="task.category" class="task-category">{{ task.category }}</div>
+          
+          <div *ngIf="task.description" class="task-description">
+            {{ task.description }}
+          </div>
+          
+          <div class="task-footer">
+            <span *ngIf="task.assignedToName" class="assignee" style="color: red;">
+  {{ task.assignedToName }}
+</span>
+
+            <span *ngIf="task.requester" class="requester">
+              Demandé par: {{ task.requester }}
+            </span>
+          </div>
+
+          <div *ngIf="task.attachmentPath" class="task-attachment">
+            📎 {{ getAttachmentName(task.attachmentPath) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Formulaire d'édition -->
+<div *ngIf="selectedTask" class="edit-modal">
+  <div class="modal-overlay" (click)="closeEditForm()"></div>
+
+  <div class="modal-content">
+    <button class="close-button" (click)="closeEditForm()">&times;</button>
+
+    <h3>{{ (selectedTask.id + '').startsWith('new') ? 'Nouveau ticket' : 'Modifier le ticket #' + selectedTask.id }}</h3>
+
+    <form (ngSubmit)="saveTaskChanges()">
+      <div class="form-group">
+        <label for="edit-title">Titre</label>
+        <input id="edit-title" type="text" [(ngModel)]="selectedTask.title" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea id="edit-description" [(ngModel)]="selectedTask.description" name="description" rows="4"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-category">Catégorie</label>
+          <input id="edit-category" type="text" [(ngModel)]="selectedTask.category" name="category">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-priority">Priorité</label>
+         <select id="edit-priority" [(ngModel)]="selectedTask.priority" name="priority">
+  <option value="high">Haute</option>
+<option value="medium">Moyenne</option>
+<option value="low">Basse</option>
+
+</select>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-status">Statut</label>
+        <select id="edit-status" [(ngModel)]="selectedTask.kanbanStatus" name="kanbanStatus">
+          <option *ngFor="let column of columns" [value]="column.id">
+            {{ column.title }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-assigned">Assigné à</label>
+        <select id="edit-assigned" [(ngModel)]="selectedTask.assignedToId" name="assignedToId">
+          <option [ngValue]="null">-- Non assigné --</option>
+          <option *ngFor="let emp of employes" [ngValue]="emp.id">
+            {{ emp.nom }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-requester">Demandé par</label>
+        <input id="edit-requester" type="text" [(ngModel)]="selectedTask.requester" name="requester">
+      </div>
+
+ 
+  <div *ngIf="selectedTask?.attachmentPath" class="form-group">
+  <label>Pièce jointe</label>
+  <div>
+    <a [href]="'https://localhost:7224' + selectedTask.attachmentPath" 
+       target="_blank"
+       class="attachment-link">
+      📎 {{ getAttachmentName(selectedTask.attachmentPath) }}
+    </a>
+  </div>
+</div>
+
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="closeEditForm()">Annuler</button>
+        <button type="submit" class="btn-save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>

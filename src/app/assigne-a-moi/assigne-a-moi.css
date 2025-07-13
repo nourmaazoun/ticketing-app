@@ -39,21 +39,26 @@
 }
 
 /* ========= Tâches ========= */
-.kanban-tasks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 15px;
-}
-
 .kanban-task {
+  position: relative; /* Permet de positionner la barre absolument */
+  padding-left: 15px; /* Espace pour la barre */
   background: white;
   border-radius: 4px;
-  padding: 12px;
+  padding: 12px 12px 12px 20px; /* Ajustement du padding pour la barre */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s;
+  border-left: 5px solid #2196F3; 
+  /* Barre bleue à gauche */
 }
+
+.kanban-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Augmentez cet espace selon vos besoins */
+  margin-top: 15px;
+}
+
 
 .kanban-task:hover {
   transform: translateY(-2px);

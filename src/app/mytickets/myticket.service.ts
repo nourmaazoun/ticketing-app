@@ -11,13 +11,13 @@ export interface Ticket {
   priority: string;
   requester: string;
   userName: string;
-    assignedToId?: number | null;
-  assignedTo?: string;
-  statut?: string;  // Ajouté pour correspondre à l'API
+  assignedToId?: number | null;
+  assignedToName?: string | null; // <- c'est ça que tu reçois du backend
+  statut?: string;
   status: string;
-  attachmentPath?: string | null; 
-
+  attachmentPath?: string | null;
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +28,26 @@ export class MyTicketService {
   constructor(private http: HttpClient) {}
 
   // 🔹 GET: Tous les tickets
-  getTickets(): Observable<Ticket[]> {
-    return this.http.get<Ticket[]>(this.apiUrl).pipe(
-      catchError(this.handleError<Ticket[]>('getTickets', []))
-    );
-  }
+getTickets(): Observable<Ticket[]> {
+  return this.http.get<any[]>(this.apiUrl).pipe(
+    map(tickets => tickets.map(t => {
+      let statut = t.statut || t.Statut || t.status || 'ouvert';
+      statut = statut.toLowerCase().trim();
+
+      // Normalisation unique ici
+      if (statut === 'en-cours') statut = 'en-cour';
+
+      return {
+        ...t,
+        status: statut,
+        assignedTo: t.assignedToName || t.AssignedToName || null 
+
+      };
+    })),
+    catchError(this.handleError<Ticket[]>('getTickets', []))
+  );
+}
+
 
   // 🔹 GET: Ticket par ID
   getTicket(id: number): Observable<Ticket> {
@@ -65,16 +80,32 @@ export class MyTicketService {
 
 
   // 🔹 GET: Tickets assignés à un employé
- getTicketsByEmploye(userId: number): Observable<Ticket[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/by-user/${userId}`).pipe(
-      map(tickets => tickets.map(t => ({
-        ...t,
-        // Conversion explicite pour Angular
-        status: t.statut || t.status || 'ouvert' // 'statut' vient de l'API, 'status' est la propriété Angular
-      }))),
-      catchError(() => of([]))
-    );
-  }
+getTicketsByEmploye(userId: number): Observable<Ticket[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/by-user/${userId}`).pipe(
+    map(tickets => {
+      console.log('Réponse brute API by-user:', tickets);
+      return tickets.map(t => ({
+        id: t.id,
+        title: t.title,
+        description: t.description,
+        category: t.category,
+        priority: t.priority === 'basse' ? 'low' :
+                  t.priority === 'moyenne' ? 'medium' :
+                  t.priority === 'haute' ? 'high' : 'low',
+        requester: t.requester,
+        userName: t.userName,
+        assignedToId: t.assignedToId,
+        assignedTo: t.assignedToName || t.AssignedToName || null,  // Essaie les deux !
+        statut: t.statut,
+        status: t.statut || t.status || 'ouvert',
+        attachmentPath: t.attachmentPath
+      }));
+    }),
+    catchError(() => of([]))
+  );
+}
+
+
 
   // 🔹 Handler générique des erreurs
   private handleError<T>(operation = 'operation', result?: T) {
