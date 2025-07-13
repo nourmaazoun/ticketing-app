@@ -106,7 +106,6 @@ getTicketsByEmploye(userId: number): Observable<Ticket[]> {
 }
 
 
-
   // 🔹 Handler générique des erreurs
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

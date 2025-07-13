@@ -1,5 +1,14 @@
 <div class="kanban-board">
   <h2>Tous les tickets</h2>
+  <label for="employe-select">Filtrer par employé :</label>
+<select id="employeSelect" [(ngModel)]="selectedEmployeId" (change)="onEmployeChange()">
+  <option [ngValue]="null">-- Tous les employés --</option>
+  <option *ngFor="let emp of employes" [ngValue]="emp.id">
+    {{ emp.nom }}
+  </option>
+</select>
+
+
 <!-- Affichage du Kanban -->
 <div *ngIf="hasTickets()" class="kanban-container">
   <div class="kanban-columns">

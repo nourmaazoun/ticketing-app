@@ -228,3 +228,28 @@
 .close-btn:hover {
   background: rgba(255, 0, 0, 0.8);
 }
+select {
+  padding: 5px 8px;
+  font-size: 14px;
+  border: 1.5px solid #007BFF;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: #0056b3;
+}
+
+select:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+label {
+  margin-right: 8px; /* espace à droite du label */
+  font-weight: 600;
+}

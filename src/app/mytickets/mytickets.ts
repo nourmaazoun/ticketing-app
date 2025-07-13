@@ -36,6 +36,7 @@ export class KanbanBoardComponent implements OnInit {
   public isDragging: boolean = false;
   public isUpdating: boolean = false;
   public showAttachmentViewer: boolean = false;
+  public selectedEmployeId: number | null = null;
 
   constructor(
     private ticketService: MyTicketService,
@@ -47,8 +48,21 @@ export class KanbanBoardComponent implements OnInit {
     this.loadAllTickets();
     console.log('Colonnes après chargement:', this.columns);
     this.loadEmployes();
-  }
+  } 
 
+onEmployeChange(): void {
+  if (this.selectedEmployeId) {
+    this.ticketService.getTicketsByEmploye(this.selectedEmployeId).subscribe({
+      next: (tickets) => {
+        this.initializeKanbanColumns(tickets);
+      },
+      error: (err) => console.error(err)
+    });
+  } else {
+    // Optionnel : afficher tous les tickets ou rien
+    this.columns.forEach(col => col.tasks = []);
+  }
+}
   private loadEmployes(): void {
     this.employeService.getEmployes().subscribe({
       next: (employes) => {
