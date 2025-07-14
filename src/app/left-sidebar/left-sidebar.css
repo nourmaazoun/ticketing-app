@@ -94,3 +94,10 @@
 .active .sidenav-link-text {
   color:white;
 }
+.main-content, .kanban-board {
+  margin-left: 16.5625rem; /* Décale tout vers la droite */
+  padding: 20px;
+  box-sizing: border-box;
+} .sidenav {
+  left: 0;
+}

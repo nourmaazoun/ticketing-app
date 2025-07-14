@@ -228,3 +228,26 @@
 .close-btn:hover {
   background: rgba(255, 0, 0, 0.8);
 }
+.edit-modal {
+  background: rgba(0, 0, 0, 0.5);
+  overflow: auto; /* Permet le scroll si nécessaire */
+}
+
+.modal-content {
+  max-height: 90vh; /* Empêche le dépassement vertical */
+  overflow-y: auto; /* Active la barre de défilement verticale */
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+}
+
+.kanban-board {
+  min-height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  margin-bottom: 40px;
+}

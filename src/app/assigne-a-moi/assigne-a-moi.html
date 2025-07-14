@@ -99,12 +99,15 @@
     </option>
   </select>
 </div>
-<select [(ngModel)]="selectedTask.assignedToId" name="assignedToId">
-  <option [ngValue]="undefined">-- Non assigné --</option>
-  <option *ngFor="let emp of employes" [ngValue]="emp.id">
-    {{ emp.nom }}
-  </option>
-</select>
+<div class="form-group">
+  <label for="edit-assignedTo">Assigné à</label>
+  <select id="edit-assignedTo" [(ngModel)]="selectedTask.assignedToId" name="assignedToId">
+    <option [ngValue]="undefined">-- Non assigné --</option>
+    <option *ngFor="let emp of employes" [ngValue]="emp.id">
+      {{ emp.nom }}
+    </option>
+  </select>
+</div>
 
 
       <!-- Affichage de la pièce jointe -->

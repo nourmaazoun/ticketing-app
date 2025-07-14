@@ -83,6 +83,14 @@ router-outlet {
 }
 
 
-html, body {
-  overflow: hidden;
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+.main-content, .kanban-board {
+  margin-left: 16.5625rem;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.sidebar-collapsed + .kanban-board {
+  margin-left: 5rem;
 }

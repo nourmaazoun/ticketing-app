@@ -106,3 +106,21 @@ html, body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* 1. Espace entre sidebar et contenu */
+.mat-drawer-content {
+  margin-left: 250px; /* Largeur du sidebar */
+  padding-left: 40px; /* Espace supplémentaire */
+  transition: all 0.3s ease; /* Animation douce */
+}
+
+/* 2. Ajustement du conteneur principal */
+.mat-drawer-container {
+  background-color: transparent;
+}
+
+/* 3. Style du sidebar */
+.mat-drawer {
+  width: 250px !important;
+  height: 100vh !important;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1); /* Ombre pour la séparation */
+}
